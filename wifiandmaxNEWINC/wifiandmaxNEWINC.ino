@@ -17,7 +17,7 @@
 /////////////////addition to show connection
 const int connectedLED = 2;          // indicates when there's a TCP connection
 const int successLED = 3;            // indicates if the meter was set
-const int resetLED = 4;              // indicates reset of Arduino
+//const int resetLED = 4;              // indicates reset of Arduino
 const int disconnectedLED = 5;       // indicates connection to server
 /////////////////addition to show connection
 
@@ -76,9 +76,7 @@ void setup() {
   // set all status LED pins:
   pinMode(connectedLED, OUTPUT);
   pinMode(successLED, OUTPUT);
-  pinMode(resetLED, OUTPUT);
   pinMode(disconnectedLED, OUTPUT);
-  pinMode(meterPin, OUTPUT);
   /////////////////addition to show connection
 
   while ( status != WL_CONNECTED) { 
@@ -91,7 +89,7 @@ void setup() {
 
   /////////////////addition to show connection
   // blink the reset LED:
-  blink(resetLED, 3);
+//  blink(resetLED, 3);
   /////////////////addition to show connection
 
   // you're connected now, so print out the status:
