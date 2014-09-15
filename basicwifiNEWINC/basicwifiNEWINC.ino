@@ -4,6 +4,10 @@ char ssid[] = "NewINC 2.4GHz";      //  your network SSID (name)
 char pass[] = "newinc231";    // your network password
 int status = WL_IDLE_STATUS;     // the Wifi radio's status
 
+pinMode(connectedLED, OUTPUT);
+pinMode(successLED, OUTPUT);
+pinMode(disconnectedLED, OUTPUT);
+
 void setup() {
   // initialize serial:
   Serial.begin(9600);
@@ -26,5 +30,6 @@ void setup() {
 void loop() {
   // do nothing
 }
- 
+
+
 
