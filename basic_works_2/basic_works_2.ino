@@ -40,6 +40,10 @@ int lookAt;
 boolean one = false;
 boolean indexis = false;
 boolean goBig = false;
+
+
+int meterSetting;
+int thisWasSet;
 //USELESS?
 int sensorMin = 100;
 int newIndex = 0;
@@ -79,6 +83,10 @@ void setup() {
 }
 
 void loop() {
+    // read the state of the pushbutton value:
+  buttonState = digitalRead(buttonPin);
+      Serial.println(buttonState);
+
   if (client.connected()) {
     if (!requested) {
       requested = makeRequest(); 
@@ -92,6 +100,16 @@ void loop() {
         airQuality = response.getValue();
         Serial.println(airQuality);
 
+
+  // check if the pushbutton is pressed.
+  // if it is, the buttonState is HIGH:
+  if (buttonState == HIGH) { 
+    Serial.println("read high");
+    Serial.println(airQuality);
+//   beNewMeter(airQuality, sensorMin, sensorMax);
+    //    Serial.println("HI");  
+    // go big function triggered  
+  }
 
         while ((millis()<5000) && airQuality!=-1 && airQuality!=0){
           if (airQuality>sensorMax){
@@ -136,7 +154,7 @@ void loop() {
 
 
 
-        
+
         if(airQuality!=0 && airQuality!=-1){
           meterIsSet = true;
           Serial.println(meterIsSet);
@@ -154,20 +172,12 @@ void loop() {
     client.stop();
     connectToServer();
   }
-  
-  // read the state of the pushbutton value:
-  buttonState = digitalRead(buttonPin);
 
-  // check if the pushbutton is pressed.
-  // if it is, the buttonState is HIGH:
-  if (buttonState == HIGH) {   
-  Serial.println("HI");  
-    // go big function triggered  
-  } 
-  else {
-      Serial.println("LO");  
+ 
+//  else {
+//    Serial.println("LO");  
     //SET boolean for "go big" to off
-  }  
+//  }  
   /////////////////addition to show connection
   // set the status LEDs:
   //will this timing be right? I think so.
@@ -198,7 +208,7 @@ boolean makeRequest() {
   digitalWrite(successLED, HIGH);   // turn the LED on (HIGH is the voltage level)
   delay(100);               // wait for a second
   digitalWrite(successLED, LOW);    // turn the LED off by making the voltage LOW
-//  delay(100);  
+  //  delay(100);  
   // Make a HTTP request:
   client.println("GET /aqscraper.php HTTP/1.1");
   client.println("HOST: airylight.aws.af.cm");  
@@ -214,7 +224,7 @@ void setMeter(int airDiff, int airQuality){
     Serial.println(thisWasSet);
     goBig=true;
   }   
- if (index>=1 && readings[index]!=thisWasSet && airQuality!=-1){ //this is a double check to make sure that we have a new reading
+  if (index>=1 && readings[index]!=thisWasSet && airQuality!=-1){ //this is a double check to make sure that we have a new reading
     Serial.println("inside airDiff");
     // map the result to a range the meter can use:
     if(airDiff>0){  
@@ -246,6 +256,23 @@ void setMeter(int airDiff, int airQuality){
 
   Serial.println("setting rotation with:"); 
   Serial.println(meterSetting);
-//  rotateDeg(meterSetting, .1); 
+  //  rotateDeg(meterSetting, .1); 
+}
+void beNewMeter(int airQuality, int sensorMin, int sensorMax){
+  Serial.println("beNewMeter");
+  if (index%5==4){ //every once in a while?
+
+    Serial.println("insideFirst");
+    int newSetting = map(airQuality, 0, 100, 0, rotateUp);
+    Serial.println(newSetting); //this is the FULL air quality rotation (not a difference between prior value)
+    int goToMin = map(0, 0, 100, 0, rotateUp);
+    int goToMax = map(100, 0, 100, 0, rotateUp);
+    Serial.println("thisismin");
+    Serial.println(goToMin);
+    Serial.println("thisismax");
+    Serial.println(goToMax);
+    goBig=false; //AH WILL THIS WORK??? -->> what would make it not work...? 
+
+  }
 }
 
