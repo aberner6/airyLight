@@ -20,7 +20,7 @@ int readings[numReadings];      // the readings from the analog input
 int index = 0;                  // the index of the current reading
 //THE BELOW MAPS FROM MOST BAD TO LEAST ?
 const int AQIMax = 100;              // maximum level for air quality
-const int requestInterval = 50000;//10000;  //longer// delay between updates to the server
+const int requestInterval = 20000;//10000;  //longer// delay between updates to the server
 
 char ssid[] = "TG1672G02";      //  your network SSID (name) 
 char pass[] = "TG1672G7F1E02";    // your network password
@@ -194,7 +194,7 @@ void setMeter(int airDiff, int airQuality){
 //  if (index==0){ //DON'T COMPARE TO THE PREVIOUS GUY, DON'T DO ANYTHING
 //    meterSetting=0;
 //  }
-  
+  Serial.println(index+"index");
   if (goBig==false){ //if you ARE the first ever, and indexis has not been set to true go far
     meterSetting = map(airQuality, 0, 100, 0, rotateUp);
     thisWasSet = airQuality;
@@ -216,7 +216,7 @@ void setMeter(int airDiff, int airQuality){
   else if (index>=1 && readings[lookAt]==thisWasSet){
    meterSetting=0; 
   }
-  if (index>2 && readings[index]==thisWasSet&&airQuality!=-1){
+  if (index>3 && readings[index]==thisWasSet&&airQuality!=-1){ //changed to index>3 from index>2
     Serial.println("inside same as first ever setting");
     if(airDiff>0){  
       meterSetting = map(airDiff, 0, 100, 0, rotateUp);
